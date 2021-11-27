@@ -3,6 +3,6 @@ import { BackendApplicationContribution } from '@theia/core/lib/node/backend-app
 import { ConnectedDeviceTracker } from "./connected-device-tracker";
 
 export default new ContainerModule(bind => {
-    bind(ConnectedDeviceChecker).toSelf().inSingletonScope();
+    bind(ConnectedDeviceTracker).toSelf().inSingletonScope();
     bind(BackendApplicationContribution).toService(ConnectedDeviceTracker);
  });
