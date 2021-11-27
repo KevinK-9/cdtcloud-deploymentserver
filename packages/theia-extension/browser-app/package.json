@@ -12,6 +12,7 @@
     "@theia/navigator": "latest",
     "@theia/preferences": "latest",
     "@theia/process": "latest",
+    "@theia/task": "^1.20.0",
     "@theia/terminal": "latest",
     "@theia/workspace": "latest",
     "cdtcloud": "0.0.0"

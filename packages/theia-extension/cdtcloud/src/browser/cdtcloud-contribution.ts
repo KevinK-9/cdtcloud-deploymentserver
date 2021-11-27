@@ -5,6 +5,7 @@ import { AbstractViewContribution } from '@theia/core/lib/browser';
 import { Command, CommandRegistry } from '@theia/core/lib/common/command';
 
 export const CdtcloudCommand: Command = { id: 'cdtcloud:command' };
+export const DeployToBoardCommand: Command = { id: 'deployToBoard:command', label: 'Deploy to the selected board' };
 
 @injectable()
 export class CdtcloudContribution extends AbstractViewContribution<CdtcloudWidget> {
@@ -48,6 +49,12 @@ export class CdtcloudContribution extends AbstractViewContribution<CdtcloudWidge
         commands.registerCommand(CdtcloudCommand, {
             execute: () => super.openView({ activate: false, reveal: true })
         });
+
+        commands.registerCommand(DeployToBoardCommand, {
+            execute: () => { 
+                
+             }
+        });
     }
 
     /**
@@ -67,4 +74,5 @@ export class CdtcloudContribution extends AbstractViewContribution<CdtcloudWidge
     registerMenus(menus: MenuModelRegistry): void {
         super.registerMenus(menus);
     }
+    
 }
