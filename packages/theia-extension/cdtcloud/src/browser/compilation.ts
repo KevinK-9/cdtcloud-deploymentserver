@@ -2,13 +2,13 @@ import { MaybePromise } from '@theia/task/node_modules/@theia/core';
 import { Task } from '@theia/task/src/node/task';
 import { TaskInfo } from '@theia/task/src/common/task-protocol';
 
-class Compilation extends Task {
-    kill(): Promise<void> {
+export class Compilation extends Task {
+    
+    getRuntimeInfo(): MaybePromise<TaskInfo> {
         throw new Error('Method not implemented.');
     }
-    getRuntimeInfo(): MaybePromise<TaskInfo> {
-        //TODO
-        
+    kill(): Promise<void> {
+        throw new Error('Method not implemented.');
     }
 
     execute(boardInfo: JSON) {
@@ -18,5 +18,5 @@ class Compilation extends Task {
             this.fireTaskExited({ taskId: this.taskId, code: 0 });
         }, 5000);
    }
-   …
+   
 }
