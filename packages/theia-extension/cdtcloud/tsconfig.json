@@ -25,7 +25,6 @@
         "outDir": "lib"
     },
     "include": [
-        "src/*",
-        "/packages/grpc/**/*"
+        "src"
     ]
 }

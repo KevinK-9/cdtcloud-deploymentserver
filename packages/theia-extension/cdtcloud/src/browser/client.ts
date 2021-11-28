@@ -1,25 +1,18 @@
-import { ServiceError } from '@grpc/grpc-js'
-import * as grpc from '@grpc/grpc-js'
-import * as protoLoader from '@grpc/proto-loader'
-import { ArduinoCoreServiceClient } from '../../../grpc/common/cc/arduino/cli/commands/v1/ArduinoCoreService'
-import { BoardListAllRequest } from '../../../grpc/common/cc/arduino/cli/commands/v1/BoardListAllRequest'
-import { BoardListAllResponse } from '../../../grpc/common/cc/arduino/cli/commands/v1/BoardListAllResponse'
-import { BoardListItem } from '../../../grpc/common/cc/arduino/cli/commands/v1/BoardListItem'
-import { BoardListResponse } from '../../../grpc/common/cc/arduino/cli/commands/v1/BoardListResponse'
-import { CompileRequest } from '../common/cc/arduino/cli/commands/v1/CompileRequest'
-import { CompileResponse } from '../../../grpc/common/cc/arduino/cli/commands/v1/CompileResponse'
-import { CreateResponse } from '../../../grpc/common/cc/arduino/cli/commands/v1/CreateResponse'
-import { DetectedPort } from '../../../grpc/common/cc/arduino/cli/commands/v1/DetectedPort'
-import { InitRequest } from '../../../grpc/common/cc/arduino/cli/commands/v1/InitRequest'
-import { Instance } from '../../../grpc/common/cc/arduino/cli/commands/v1/Instance'
-import { Port } from '../../../grpc/common/cc/arduino/cli/commands/v1/Port'
-import { UploadResponse } from '../../../../grpc/common/cc/arduino/cli/commands/v1/UploadResponse'
-import { ProtoGrpcType } from '../../../../grpc/common/commands'
-
+import { ProtoGrpcType } from 'arduino-cli_proto_ts/common/commands';
+import { ArduinoCoreServiceClient } from 'arduino-cli_proto_ts/common/cc/arduino/cli/commands/v1/ArduinoCoreService';
+import { ServiceError } from '@grpc/grpc-js';
+import * as grpc from '@grpc/grpc-js';
+import * as protoLoader from '@grpc/proto-loader';
+import { CompileRequest } from 'arduino-cli_proto_ts/common/cc/arduino/cli/commands/v1/CompileRequest';
+import { CompileResponse } from 'arduino-cli_proto_ts/common/cc/arduino/cli/commands/v1/CompileResponse';
+import { CreateResponse } from 'arduino-cli_proto_ts/common/cc/arduino/cli/commands/v1/CreateResponse';
+import { InitRequest } from 'arduino-cli_proto_ts/common/cc/arduino/cli/commands/v1/InitRequest';
+import { Instance } from 'arduino-cli_proto_ts/common/cc/arduino/cli/commands/v1/Instance';
 export class RPCClient {
   address: string;
   private client: ArduinoCoreServiceClient | undefined;
   instance: Instance | undefined;
+  buildPath?: string
 
   constructor (address: string = '127.0.0.1:50051') {
     this.address = address
@@ -99,95 +92,40 @@ export class RPCClient {
     })
   }
 
-  async getPath (fqbn: String, sketchPath: string, file: string): Promise<CompileResponse> {
+  async getBuildPath (fqbn: string, sketchPath: string): Promise<string> {
     const compileRequest: CompileRequest = {
         instance: this.instance,
         fqbn: fqbn,
-        
-    }
-  }
-
-
-
-
-
-
-
-
-
-
-  async listBoards (): Promise<DetectedPort[]> {
-    const boardListRequest: BoardListAllRequest = {
-      instance: this.instance,
-      search_args: [],
-      include_hidden_boards: false
+        sketch_path: sketchPath
     }
 
     return await new Promise((resolve, reject) => {
       if (this.client == null) {
         return reject(new Error('Client not initialized'))
       }
-      this.client.BoardList(boardListRequest, (err: ServiceError | null, data?: BoardListResponse) => {
-        if (err != null) {
-          return reject(new Error(err.message))
-        }
 
-        if ((data?.ports) == null) {
-          return reject(new Error('No Boards found'))
-        }
-
-        return resolve(data.ports)
-      })
-    })
-  }
-
-  async uploadBin (fqbn: string, port: Port, file: string): Promise<boolean> {
-    const uploadRequest = { instance: this.instance, fqbn, port, import_file: file }
-
-    return await new Promise((resolve, reject) => {
-      if (this.client == null) {
-        return reject(new Error('Client not initialized'))
-      }
-
-      const stream = this.client.Upload(uploadRequest)
-      stream.on('data', (data: UploadResponse) => {
+      const response = this.client.Compile(compileRequest)
+      response.on('data', (data: CompileResponse) => {
         if (data.err_stream && data.err_stream.length > 0) {
           reject(new Error(data.err_stream.toString()))
         }
+        if(!data.build_path) {
+          reject(new Error('No build path found'))
+        }
+        this.buildPath = data.build_path
       })
-      stream.on('end', () => {
-        stream.destroy()
+
+      response.on('end', () => {
+        response.destroy()
       })
-      stream.on('status', (status) => {
-        return status.code === 0 ? resolve(true) : reject(new Error(status.details))
+      response.on('status', (status) => {
+        if (status.code === 0){
+          if(this.buildPath != null)
+          resolve(this.buildPath)
+         } else reject(new Error(status.details))
       })
-      stream.on('error', (err: Error) => {
+      response.on('error', (err: Error) => {
         reject(new Error(err.message))
-      })
-    })
-  }
-
-  async listAllBoards (): Promise<BoardListItem[]> {
-    const boardListAllRequest: BoardListAllRequest = {
-      instance: this.instance,
-      search_args: [],
-      include_hidden_boards: false
-    }
-
-    return await new Promise((resolve, reject) => {
-      if (this.client == null) {
-        return reject(new Error('Client not initialized'))
-      }
-      this.client.BoardListAll(boardListAllRequest, (err: ServiceError | null, data?: BoardListAllResponse) => {
-        if (err != null) {
-          return reject(new Error(err.message))
-        }
-
-        if ((data?.boards) == null) {
-          return reject(new Error('No Boards found'))
-        }
-
-        return resolve(data.boards)
       })
     })
   }

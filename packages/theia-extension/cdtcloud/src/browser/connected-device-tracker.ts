@@ -1,3 +1,4 @@
+import { RPCClient } from './client';
 import { MaybePromise } from "@theia/core";
 import { BackendApplicationContribution } from "@theia/core/lib/node/backend-application";
 import { injectable } from "@theia/core/shared/inversify";
@@ -14,6 +15,7 @@ class Device {
 export class ConnectedDeviceTracker implements BackendApplicationContribution {
 
    protected devices: [Device];
+   protected binaryFile: string;
 
    configure(app: Application): void {
     app.get('/device-types', (request, response) => {
@@ -37,11 +39,31 @@ export class ConnectedDeviceTracker implements BackendApplicationContribution {
     }*/
    }
 
-   deployToDevice(): void {
-    
-   }
+   forwardBuildPath(fqbn: string): void {
+        async () => {
+            const client = new RPCClient()
+            await client.init()
+            await client.createInstance()
+            await client.initInstance()
 
-   onStop(): void {
-       
+            const buildPath = await client.getBuildPath
+
+            const fs = require('fs');
+
+            fs.readdir(buildPath, (err: any, files: any) => {
+                if(err != null){
+                    return new Error(err.message)
+                }
+                files.forEach((file: any) => {
+                    if(file.contains('.bin')){
+                        this.binaryFile = file
+                    }
+                });
+            });
+
+            const buffer = Buffer.from(buildPath + '/' + this.binaryFile)
+
+            //TODO http request to send buffer
+        }
    }
 }
