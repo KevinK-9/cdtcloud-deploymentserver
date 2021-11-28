@@ -17,6 +17,8 @@ export default new ContainerModule(bind => {
         createWidget: () => ctx.container.get<CdtcloudWidget>(CdtcloudWidget)
     })).inSingletonScope();
     
+    /*
     bind(CompilationRunner).toSelf().inSingletonScope();
     bind(TaskRunnerContribution).to(CompilationRunnerContribution);
+    */
 });
