@@ -6,15 +6,13 @@ import { BoardListAllRequest } from '../../../grpc/common/cc/arduino/cli/command
 import { BoardListAllResponse } from '../../../grpc/common/cc/arduino/cli/commands/v1/BoardListAllResponse'
 import { BoardListItem } from '../../../grpc/common/cc/arduino/cli/commands/v1/BoardListItem'
 import { BoardListResponse } from '../../../grpc/common/cc/arduino/cli/commands/v1/BoardListResponse'
-import { CompileRequest } from '../common/cc/arduino/cli/commands/v1/CompileRequest'
-import { CompileResponse } from '../../../grpc/common/cc/arduino/cli/commands/v1/CompileResponse'
 import { CreateResponse } from '../../../grpc/common/cc/arduino/cli/commands/v1/CreateResponse'
 import { DetectedPort } from '../../../grpc/common/cc/arduino/cli/commands/v1/DetectedPort'
 import { InitRequest } from '../../../grpc/common/cc/arduino/cli/commands/v1/InitRequest'
 import { Instance } from '../../../grpc/common/cc/arduino/cli/commands/v1/Instance'
 import { Port } from '../../../grpc/common/cc/arduino/cli/commands/v1/Port'
-import { UploadResponse } from '../../../../grpc/common/cc/arduino/cli/commands/v1/UploadResponse'
-import { ProtoGrpcType } from '../../../../grpc/common/commands'
+import { UploadResponse } from '../../../grpc/common/cc/arduino/cli/commands/v1/UploadResponse'
+import { ProtoGrpcType } from "../../../grpc/common/commands";
 
 export class RPCClient {
   address: string;
@@ -61,6 +59,7 @@ export class RPCClient {
       if (this.client == null) {
         return reject(new Error('Client not initialized'))
       }
+
       this.client.Create({}, (err: ServiceError | null, data?: CreateResponse) => {
         if (err != null) {
           return reject(new Error(err.message))
@@ -99,29 +98,8 @@ export class RPCClient {
     })
   }
 
-  async getPath (fqbn: String, sketchPath: string, file: string): Promise<CompileResponse> {
-    const compileRequest: CompileRequest = {
-        instance: this.instance,
-        fqbn: fqbn,
-        
-    }
-  }
-
-
-
-
-
-
-
-
-
-
   async listBoards (): Promise<DetectedPort[]> {
-    const boardListRequest: BoardListAllRequest = {
-      instance: this.instance,
-      search_args: [],
-      include_hidden_boards: false
-    }
+    const boardListRequest: BoardListAllRequest = { instance: this.instance }
 
     return await new Promise((resolve, reject) => {
       if (this.client == null) {
