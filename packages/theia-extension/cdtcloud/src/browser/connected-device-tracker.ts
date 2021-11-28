@@ -37,6 +37,10 @@ export class ConnectedDeviceTracker implements BackendApplicationContribution {
     }*/
    }
 
+   deployToDevice(): void {
+    
+   }
+
    onStop(): void {
        
    }
