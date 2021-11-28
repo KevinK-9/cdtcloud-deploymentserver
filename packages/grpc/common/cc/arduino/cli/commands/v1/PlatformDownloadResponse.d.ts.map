@@ -1,0 +1,1 @@
+{"version":3,"file":"PlatformDownloadResponse.d.ts","sourceRoot":"","sources":["PlatformDownloadResponse.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,gBAAgB,IAAI,4CAA4C,EAAE,wBAAwB,IAAI,oDAAoD,EAAE,MAAM,oBAAoB,CAAC;AAE7L,MAAM,WAAW,wBAAwB;IACvC,UAAU,CAAC,EAAE,CAAC,4CAA4C,GAAG,IAAI,CAAC,CAAC;CACpE;AAED,MAAM,WAAW,gCAAgC;IAC/C,UAAU,EAAE,CAAC,oDAAoD,GAAG,IAAI,CAAC,CAAC;CAC3E"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"BoardSearchResponse.d.ts","sourceRoot":"","sources":["BoardSearchResponse.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,aAAa,IAAI,yCAAyC,EAAE,qBAAqB,IAAI,iDAAiD,EAAE,MAAM,iBAAiB,CAAC;AAE9K,MAAM,WAAW,mBAAmB;IAClC,QAAQ,CAAC,EAAE,CAAC,yCAAyC,CAAC,EAAE,CAAC;CAC1D;AAED,MAAM,WAAW,2BAA2B;IAC1C,QAAQ,EAAE,CAAC,iDAAiD,CAAC,EAAE,CAAC;CACjE"}

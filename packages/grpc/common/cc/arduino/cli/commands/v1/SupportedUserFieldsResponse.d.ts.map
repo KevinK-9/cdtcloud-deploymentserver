@@ -1,0 +1,1 @@
+{"version":3,"file":"SupportedUserFieldsResponse.d.ts","sourceRoot":"","sources":["SupportedUserFieldsResponse.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,SAAS,IAAI,qCAAqC,EAAE,iBAAiB,IAAI,6CAA6C,EAAE,MAAM,aAAa,CAAC;AAE1J,MAAM,WAAW,2BAA2B;IAC1C,aAAa,CAAC,EAAE,CAAC,qCAAqC,CAAC,EAAE,CAAC;CAC3D;AAED,MAAM,WAAW,mCAAmC;IAClD,aAAa,EAAE,CAAC,6CAA6C,CAAC,EAAE,CAAC;CAClE"}

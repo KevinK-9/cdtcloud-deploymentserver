@@ -1,0 +1,1 @@
+{"version":3,"file":"LibraryListResponse.d.ts","sourceRoot":"","sources":["LibraryListResponse.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,gBAAgB,IAAI,4CAA4C,EAAE,wBAAwB,IAAI,oDAAoD,EAAE,MAAM,oBAAoB,CAAC;AAE7L,MAAM,WAAW,mBAAmB;IAClC,qBAAqB,CAAC,EAAE,CAAC,4CAA4C,CAAC,EAAE,CAAC;CAC1E;AAED,MAAM,WAAW,2BAA2B;IAC1C,qBAAqB,EAAE,CAAC,oDAAoD,CAAC,EAAE,CAAC;CACjF"}

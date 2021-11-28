@@ -1,0 +1,8 @@
+import type { MonitorPortSetting as _cc_arduino_cli_commands_v1_MonitorPortSetting, MonitorPortSetting__Output as _cc_arduino_cli_commands_v1_MonitorPortSetting__Output } from './MonitorPortSetting';
+export interface MonitorPortConfiguration {
+    'settings'?: (_cc_arduino_cli_commands_v1_MonitorPortSetting)[];
+}
+export interface MonitorPortConfiguration__Output {
+    'settings': (_cc_arduino_cli_commands_v1_MonitorPortSetting__Output)[];
+}
+//# sourceMappingURL=MonitorPortConfiguration.d.ts.map

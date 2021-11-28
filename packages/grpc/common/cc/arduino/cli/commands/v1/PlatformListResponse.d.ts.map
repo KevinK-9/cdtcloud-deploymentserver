@@ -1,0 +1,1 @@
+{"version":3,"file":"PlatformListResponse.d.ts","sourceRoot":"","sources":["PlatformListResponse.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,QAAQ,IAAI,oCAAoC,EAAE,gBAAgB,IAAI,4CAA4C,EAAE,MAAM,YAAY,CAAC;AAErJ,MAAM,WAAW,oBAAoB;IACnC,qBAAqB,CAAC,EAAE,CAAC,oCAAoC,CAAC,EAAE,CAAC;CAClE;AAED,MAAM,WAAW,4BAA4B;IAC3C,qBAAqB,EAAE,CAAC,4CAA4C,CAAC,EAAE,CAAC;CACzE"}

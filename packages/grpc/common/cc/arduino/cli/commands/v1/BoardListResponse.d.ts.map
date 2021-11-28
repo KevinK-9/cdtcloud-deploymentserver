@@ -1,0 +1,1 @@
+{"version":3,"file":"BoardListResponse.d.ts","sourceRoot":"","sources":["BoardListResponse.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,YAAY,IAAI,wCAAwC,EAAE,oBAAoB,IAAI,gDAAgD,EAAE,MAAM,gBAAgB,CAAC;AAEzK,MAAM,WAAW,iBAAiB;IAChC,OAAO,CAAC,EAAE,CAAC,wCAAwC,CAAC,EAAE,CAAC;CACxD;AAED,MAAM,WAAW,yBAAyB;IACxC,OAAO,EAAE,CAAC,gDAAgD,CAAC,EAAE,CAAC;CAC/D"}

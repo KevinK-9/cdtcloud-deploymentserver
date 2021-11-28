@@ -1,0 +1,1 @@
+{"version":3,"file":"BoardIdentificationProperties.d.ts","sourceRoot":"","sources":["BoardIdentificationProperties.ts"],"names":[],"mappings":"AAGA,MAAM,WAAW,6BAA6B;IAC5C,YAAY,CAAC,EAAE,CAAC;QAAC,CAAC,GAAG,EAAE,MAAM,GAAG,MAAM,CAAA;KAAC,CAAC,CAAC;CAC1C;AAED,MAAM,WAAW,qCAAqC;IACpD,YAAY,EAAE,CAAC;QAAC,CAAC,GAAG,EAAE,MAAM,GAAG,MAAM,CAAA;KAAC,CAAC,CAAC;CACzC"}

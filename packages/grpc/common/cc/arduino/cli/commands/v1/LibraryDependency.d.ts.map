@@ -1,0 +1,1 @@
+{"version":3,"file":"LibraryDependency.d.ts","sourceRoot":"","sources":["LibraryDependency.ts"],"names":[],"mappings":"AAGA,MAAM,WAAW,iBAAiB;IAChC,MAAM,CAAC,EAAE,CAAC,MAAM,CAAC,CAAC;IAClB,oBAAoB,CAAC,EAAE,CAAC,MAAM,CAAC,CAAC;CACjC;AAED,MAAM,WAAW,yBAAyB;IACxC,MAAM,EAAE,CAAC,MAAM,CAAC,CAAC;IACjB,oBAAoB,EAAE,CAAC,MAAM,CAAC,CAAC;CAChC"}

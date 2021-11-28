@@ -1,0 +1,1 @@
+{"version":3,"file":"MonitorPortConfiguration.d.ts","sourceRoot":"","sources":["MonitorPortConfiguration.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,kBAAkB,IAAI,8CAA8C,EAAE,0BAA0B,IAAI,sDAAsD,EAAE,MAAM,sBAAsB,CAAC;AAEvM,MAAM,WAAW,wBAAwB;IACvC,UAAU,CAAC,EAAE,CAAC,8CAA8C,CAAC,EAAE,CAAC;CACjE;AAED,MAAM,WAAW,gCAAgC;IAC/C,UAAU,EAAE,CAAC,sDAAsD,CAAC,EAAE,CAAC;CACxE"}

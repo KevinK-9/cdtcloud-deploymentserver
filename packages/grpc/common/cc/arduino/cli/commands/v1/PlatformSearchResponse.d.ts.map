@@ -1,0 +1,1 @@
+{"version":3,"file":"PlatformSearchResponse.d.ts","sourceRoot":"","sources":["PlatformSearchResponse.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,QAAQ,IAAI,oCAAoC,EAAE,gBAAgB,IAAI,4CAA4C,EAAE,MAAM,YAAY,CAAC;AAErJ,MAAM,WAAW,sBAAsB;IACrC,eAAe,CAAC,EAAE,CAAC,oCAAoC,CAAC,EAAE,CAAC;CAC5D;AAED,MAAM,WAAW,8BAA8B;IAC7C,eAAe,EAAE,CAAC,4CAA4C,CAAC,EAAE,CAAC;CACnE"}
