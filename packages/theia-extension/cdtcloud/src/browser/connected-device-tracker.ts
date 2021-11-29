@@ -16,6 +16,7 @@ export class ConnectedDeviceTracker implements BackendApplicationContribution {
 
    protected devices: [Device];
    protected binaryFile: string;
+   protected binaryFileContent: String;
 
    configure(app: Application): void {
     app.get('/device-types', (request, response) => {
@@ -32,11 +33,11 @@ export class ConnectedDeviceTracker implements BackendApplicationContribution {
    }
 
    protected updateDevices(): void {
-    /*async () => {
+    async () => {
         const response = await fetch(`http://localhost:3001/device-types/`);
         const data = await response.json();
         console.log(data);
-    }*/
+    }
    }
 
    forwardBuildPath(fqbn: string): void {
@@ -46,7 +47,7 @@ export class ConnectedDeviceTracker implements BackendApplicationContribution {
             await client.createInstance()
             await client.initInstance()
 
-            const buildPath = await client.getBuildPath
+            const buildPath = await client.getBuildPath(fqbn)
 
             const fs = require('fs');
 
@@ -60,10 +61,22 @@ export class ConnectedDeviceTracker implements BackendApplicationContribution {
                     }
                 });
             });
+            fs.readfile(this.binaryFile, (err: any, content: any) => {
+                if(err != null){
+                    return new Error(err.message)
+                }
+                
+                if(content == null){
+                    return new Error('no content found in binary file')
+                }
+                this.binaryFileContent = content
 
-            const buffer = Buffer.from(buildPath + '/' + this.binaryFile)
+            });
+            //TODO: fs.readfile()
 
-            //TODO http request to send buffer
+            const buffer = Buffer.from(this.binaryFileContent)
+            
+            //TODO: http request to send buffer
         }
    }
 }

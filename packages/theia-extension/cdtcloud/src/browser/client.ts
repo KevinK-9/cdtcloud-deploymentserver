@@ -92,11 +92,10 @@ export class RPCClient {
     })
   }
 
-  async getBuildPath (fqbn: string, sketchPath: string): Promise<string> {
+  async getBuildPath (fqbn: string): Promise<string> {
     const compileRequest: CompileRequest = {
         instance: this.instance,
-        fqbn: fqbn,
-        sketch_path: sketchPath
+        fqbn: fqbn
     }
 
     return await new Promise((resolve, reject) => {
