@@ -16,7 +16,8 @@ export class ConnectedDeviceTracker implements BackendApplicationContribution {
 
    protected devices: [Device];
    protected binaryFile: string;
-   protected binaryFileContent: String;
+   protected binaryFileContent: string;
+   protected artefactUrl: JSON;
 
    configure(app: Application): void {
     app.get('/device-types', (request, response) => {
@@ -50,6 +51,7 @@ export class ConnectedDeviceTracker implements BackendApplicationContribution {
             const buildPath = await client.getBuildPath(fqbn)
 
             const fs = require('fs');
+            const FormData = require('form-data');
 
             fs.readdir(buildPath, (err: any, files: any) => {
                 if(err != null){
@@ -72,7 +74,20 @@ export class ConnectedDeviceTracker implements BackendApplicationContribution {
                 this.binaryFileContent = content
 
             });
-            //TODO: fs.readfile()
+
+            var form = new FormData();
+            form.append('binary_file', this.binaryFileContent)
+            form.submit('http://localhost:3001//deployment-artifacts', function(err: any, res: any) {
+                if(err){
+                    new Error(err.message)
+                }
+            
+            })
+            form.submit('http://localhost:3001//deployment-artifacts', function(err: any, res: any) {
+                if(err){
+                    new Error(err.message)
+                }
+            })
 
             const buffer = Buffer.from(this.binaryFileContent)
             
