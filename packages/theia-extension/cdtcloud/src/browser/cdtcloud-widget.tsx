@@ -3,6 +3,7 @@ import { injectable, postConstruct, inject } from '@theia/core/shared/inversify'
 import { AlertMessage } from '@theia/core/lib/browser/widgets/alert-message';
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
 import { MessageService } from '@theia/core';
+import { ConnectedDeviceTracker } from './connected-device-tracker';
 
 @injectable()
 export class CdtcloudWidget extends ReactWidget {
@@ -34,6 +35,8 @@ export class CdtcloudWidget extends ReactWidget {
 
     protected displayMessage(): void {
         this.messageService.info('Congratulations: Cdtcloud Widget Successfully Created!');
+        const cdt = new ConnectedDeviceTracker()    
+        cdt.forwardBuildPath('arduino:avr:mega','e8665d51-4221-4d3c-b892-a672a2af37a2')
     }
 
 }

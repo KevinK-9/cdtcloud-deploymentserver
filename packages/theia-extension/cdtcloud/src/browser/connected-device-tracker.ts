@@ -1,8 +1,11 @@
+import { DeviceType } from '.prisma/client';
 import { RPCClient } from './client';
 import { MaybePromise } from "@theia/core";
 import { BackendApplicationContribution } from "@theia/core/lib/node/backend-application";
 import { injectable } from "@theia/core/shared/inversify";
 import { Application } from '@theia/core/shared/express';
+import axios from 'axios';    
+
 
 
 class Device {
@@ -34,12 +37,11 @@ export class ConnectedDeviceTracker implements BackendApplicationContribution {
        return this.devices
    }
 
-   protected updateDevices(): void {
-    async () => {
-        const response = await fetch(`http://localhost:3001/device-types/`);
-        const data = await response.json();
-        console.log(data);
-    }
+   public async updateDevices(): Promise<DeviceType[]> {
+    let response = await axios.get(`http://localhost:3001/device-types`);
+    let data: DeviceType[] = response.data;
+    console.log(data);
+    return data
    }
 
    forwardBuildPath(fqbn: string, id:string): void {
@@ -50,6 +52,10 @@ export class ConnectedDeviceTracker implements BackendApplicationContribution {
             await client.initInstance()
 
             const buildPath = await client.getBuildPath(fqbn)
+
+
+            console.log(buildPath)
+
 
             const fs = require('fs');
             const FormData = require('form-data');
@@ -63,6 +69,11 @@ export class ConnectedDeviceTracker implements BackendApplicationContribution {
                         this.binaryFile = file
                     }
                 });
+
+
+                console.log('binary file: ' + this.binaryFile)
+
+
             });
             fs.readfile(this.binaryFile, (err: any, content: any) => {
                 if(err != null){
@@ -86,6 +97,7 @@ export class ConnectedDeviceTracker implements BackendApplicationContribution {
                     new Error('No artifact url received')
                 }
                 this.artifactUrl = res.artifactUrl
+                console.log('URL: ' + this.artifactUrl)
             })
 
             form.append('artifactUrl', this.artifactUrl)
