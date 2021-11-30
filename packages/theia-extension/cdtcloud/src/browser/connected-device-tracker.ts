@@ -17,19 +17,20 @@ export class ConnectedDeviceTracker implements BackendApplicationContribution {
    protected devices: [Device];
    protected binaryFile: string;
    protected binaryFileContent: string;
-   protected artefactUrl: JSON;
+   protected artifactUrl: string;
 
-   configure(app: Application): void {
-    app.get('/device-types', (request, response) => {
-        
-    });
-}
+    configure(app: Application): void {
+        app.get('/device-types', (request, response) => {
+            
+        });
+    }
 
     initialize(): MaybePromise<void> {
         console.log("Checking for connected devices.");
    }
 
    protected getDevices(): [Device] {
+       //TODO: necessary?
        return this.devices
    }
 
@@ -41,7 +42,7 @@ export class ConnectedDeviceTracker implements BackendApplicationContribution {
     }
    }
 
-   forwardBuildPath(fqbn: string): void {
+   forwardBuildPath(fqbn: string, id:string): void {
         async () => {
             const client = new RPCClient()
             await client.init()
@@ -77,21 +78,24 @@ export class ConnectedDeviceTracker implements BackendApplicationContribution {
 
             var form = new FormData();
             form.append('binary_file', this.binaryFileContent)
-            form.submit('http://localhost:3001//deployment-artifacts', function(err: any, res: any) {
+            form.submit('http://localhost:3001/deployment-artifacts', (err: any, res: any) => {
                 if(err){
                     new Error(err.message)
                 }
-            
-            })
-            form.submit('http://localhost:3001//deployment-artifacts', function(err: any, res: any) {
-                if(err){
-                    new Error(err.message)
+                if (res == null){
+                    new Error('No artifact url received')
                 }
+                this.artifactUrl = res.artifactUrl
             })
 
-            const buffer = Buffer.from(this.binaryFileContent)
-            
-            //TODO: http request to send buffer
+            form.append('artifactUrl', this.artifactUrl)
+            form.append('id', id)
+            form.submit('http://localhost:3001/deploymentRequests', (err: any, res: any) => {
+                if(err){
+                    new Error(err.message)
+                }
+                //TODO: handle response
+            })
         }
    }
 }
