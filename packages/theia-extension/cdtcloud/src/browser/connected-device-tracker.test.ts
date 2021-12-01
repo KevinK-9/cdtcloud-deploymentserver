@@ -12,8 +12,11 @@ describe('ConnectedDeviceTracker', () => {
 
     it('should fetch device types', async () => {
         const types = await deviceTracker.updateDevices()
-        expect(typeof types).toBe('object')
-        expect(types.length).toBeDefined()
+        expect(types).toEqual(expect.arrayContaining([{
+            id: '2d5a14c2-8e96-45ca-9a9f-290dfb700c33',
+            name: 'Arduino Leonardo ETH',
+            fqbn: 'arduino:avr:leonardoeth'
+          }]))
 
     });
 });
