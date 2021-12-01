@@ -36,7 +36,7 @@ export class CdtcloudWidget extends ReactWidget {
     protected displayMessage(): void {
         this.messageService.info('Congratulations: Cdtcloud Widget Successfully Created!');
         const cdt = new ConnectedDeviceTracker()    
-        cdt.forwardBuildPath('arduino:avr:mega','e8665d51-4221-4d3c-b892-a672a2af37a2')
+        //cdt.forwardBuildPath('arduino:avr:mega','e8665d51-4221-4d3c-b892-a672a2af37a2')
     }
 
 }

@@ -40,74 +40,71 @@ export class ConnectedDeviceTracker implements BackendApplicationContribution {
    public async updateDevices(): Promise<DeviceType[]> {
     let response = await axios.get(`http://localhost:3001/device-types`);
     let data: DeviceType[] = response.data;
-    console.log(data);
     return data
    }
 
-   forwardBuildPath(fqbn: string, id:string): void {
-        async () => {
-            const client = new RPCClient()
-            await client.init()
-            await client.createInstance()
-            await client.initInstance()
+   async forwardBuildPath(fqbn: string, id:string, sketchPath: string): Promise<void> {
+        const client = new RPCClient()
+        await client.init()
+        await client.createInstance()
+        await client.initInstance()
 
-            const buildPath = await client.getBuildPath(fqbn)
-
-
-            console.log(buildPath)
+        const buildPath = await client.getBuildPath(fqbn, sketchPath)
 
 
-            const fs = require('fs');
-            const FormData = require('form-data');
+        console.log(buildPath)
 
-            fs.readdir(buildPath, (err: any, files: any) => {
-                if(err != null){
-                    return new Error(err.message)
+
+        const fs = require('fs');
+        const FormData = require('form-data');
+
+        fs.readdir(buildPath, (err: any, files: any) => {
+            if(err != null){
+                return new Error(err.message)
+            }
+            files.forEach((file: any) => {
+                if(file.contains('.bin')){
+                    this.binaryFile = file
                 }
-                files.forEach((file: any) => {
-                    if(file.contains('.bin')){
-                        this.binaryFile = file
-                    }
-                });
-
-
-                console.log('binary file: ' + this.binaryFile)
-
-
-            });
-            fs.readfile(this.binaryFile, (err: any, content: any) => {
-                if(err != null){
-                    return new Error(err.message)
-                }
-                
-                if(content == null){
-                    return new Error('no content found in binary file')
-                }
-                this.binaryFileContent = content
-
             });
 
-            var form = new FormData();
-            form.append('binary_file', this.binaryFileContent)
-            form.submit('http://localhost:3001/deployment-artifacts', (err: any, res: any) => {
-                if(err){
-                    new Error(err.message)
-                }
-                if (res == null){
-                    new Error('No artifact url received')
-                }
-                this.artifactUrl = res.artifactUrl
-                console.log('URL: ' + this.artifactUrl)
-            })
 
-            form.append('artifactUrl', this.artifactUrl)
-            form.append('id', id)
-            form.submit('http://localhost:3001/deploymentRequests', (err: any, res: any) => {
-                if(err){
-                    new Error(err.message)
-                }
-                //TODO: handle response
-            })
-        }
+            console.log('binary file: ' + this.binaryFile)
+
+
+        });
+        fs.readfile(this.binaryFile, (err: any, content: any) => {
+            if(err != null){
+                return new Error(err.message)
+            }
+            
+            if(content == null){
+                return new Error('no content found in binary file')
+            }
+            this.binaryFileContent = content
+
+        });
+
+        var form = new FormData();
+        form.append('binary_file', this.binaryFileContent)
+        form.submit('http://localhost:3001/deployment-artifacts', (err: any, res: any) => {
+            if(err){
+                new Error(err.message)
+            }
+            if (res == null){
+                new Error('No artifact url received')
+            }
+            this.artifactUrl = res.artifactUrl
+            console.log('URL: ' + this.artifactUrl)
+        })
+
+        form.append('artifactUrl', this.artifactUrl)
+        form.append('id', id)
+        form.submit('http://localhost:3001/deploymentRequests', (err: any, res: any) => {
+            if(err){
+                new Error(err.message)
+            }
+            //TODO: handle response
+        })
    }
 }

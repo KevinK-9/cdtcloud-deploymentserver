@@ -8,6 +8,7 @@ import { CompileResponse } from 'arduino-cli_proto_ts/common/cc/arduino/cli/comm
 import { CreateResponse } from 'arduino-cli_proto_ts/common/cc/arduino/cli/commands/v1/CreateResponse';
 import { InitRequest } from 'arduino-cli_proto_ts/common/cc/arduino/cli/commands/v1/InitRequest';
 import { Instance } from 'arduino-cli_proto_ts/common/cc/arduino/cli/commands/v1/Instance';
+import { join } from 'path';
 export class RPCClient {
   address: string;
   private client: ArduinoCoreServiceClient | undefined;
@@ -21,7 +22,7 @@ export class RPCClient {
   async init (): Promise<void> {
     const address = this.address
     const packageDefinition = protoLoader.loadSync(
-      '../grpc/proto/cc/arduino/cli/commands/v1/commands.proto', {
+      join(__dirname, '../../../../grpc/proto/cc/arduino/cli/commands/v1/commands.proto'), {
         keepCase: true,
         longs: String,
         enums: String,
@@ -92,10 +93,12 @@ export class RPCClient {
     })
   }
 
-  async getBuildPath (fqbn: string): Promise<string> {
+  async getBuildPath (fqbn: string, sketchPath:string): Promise<string> {
     const compileRequest: CompileRequest = {
         instance: this.instance,
-        fqbn: fqbn
+        fqbn: fqbn,
+        sketch_path: sketchPath,
+        build_path: "C:\\Users\\kevin\\Documents\\Arduino\\Light_Project_1"
     }
 
     return await new Promise((resolve, reject) => {
@@ -105,6 +108,7 @@ export class RPCClient {
 
       const response = this.client.Compile(compileRequest)
       response.on('data', (data: CompileResponse) => {
+        console.log(data)
         if (data.err_stream && data.err_stream.length > 0) {
           reject(new Error(data.err_stream.toString()))
         }
