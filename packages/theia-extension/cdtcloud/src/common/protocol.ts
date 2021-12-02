@@ -1,4 +1,4 @@
-import { DeviceType } from '.prisma/client';
+import { DeviceType } from '@prisma/client';
 
 export const DeploymentService = Symbol('DeploymentService');
 export const DEPLOYMENT_PATH = '/services/deploy';
@@ -7,7 +7,7 @@ export interface DeploymentService {
 }
 
 export const DeviceTrackerService = Symbol('DeviceTracker');
-export const DEVICE_TRACKER_PATH = '/services/deviceTracker';
+export const DEVICE_TRACKER_PATH = '/services/device-tracker';
 export interface DeviceTrackerService {
     updateDevices(): Promise<DeviceType[]>
 }
