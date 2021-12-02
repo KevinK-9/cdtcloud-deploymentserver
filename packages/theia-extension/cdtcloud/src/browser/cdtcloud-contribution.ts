@@ -1,11 +1,18 @@
-import { injectable } from '@theia/core/shared/inversify';
+import { inject, injectable } from '@theia/core/shared/inversify';
 import { MenuModelRegistry } from '@theia/core';
 import { CdtcloudWidget } from './cdtcloud-widget';
 import { AbstractViewContribution } from '@theia/core/lib/browser';
 import { Command, CommandRegistry } from '@theia/core/lib/common/command';
+import { DeviceTrackerService } from '../common/protocol';
+
 
 export const CdtcloudCommand: Command = { id: 'cdtcloud:command' };
 export const DeployToBoardCommand: Command = { id: 'deployToBoard:command', label: 'Deploy to the selected board' };
+const DeviceTrackerCommand: Command = {
+    id: 'deviceTracker.command',
+    label: 'Get available Devices',
+};
+
 
 @injectable()
 export class CdtcloudContribution extends AbstractViewContribution<CdtcloudWidget> {
@@ -45,15 +52,16 @@ export class CdtcloudContribution extends AbstractViewContribution<CdtcloudWidge
      *
      * @param commands
      */
+    
+     @inject(DeviceTrackerService) private readonly deviceTrackerService: DeviceTrackerService;
+     
     registerCommands(commands: CommandRegistry): void {
         commands.registerCommand(CdtcloudCommand, {
             execute: () => super.openView({ activate: false, reveal: true })
         });
 
-        commands.registerCommand(DeployToBoardCommand, {
-            execute: () => { 
-                
-             }
+        commands.registerCommand(DeviceTrackerCommand, {
+            execute: () => this.deviceTrackerService.updateDevices().then(r => console.log(r))
         });
     }
 
