@@ -10,6 +10,7 @@
   ],
   "dependencies": {
     "@theia/core": "latest",
+    "@types/form-data": "^2.5.0",
     "axios": "^0.24.0"
   },
   "devDependencies": {

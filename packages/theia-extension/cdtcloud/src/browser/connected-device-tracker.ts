@@ -1,25 +1,20 @@
+import FormData from 'form-data';
+import { readFile, readdir } from 'fs/promises';
 import { DeviceType } from '.prisma/client';
 import { RPCClient } from './client';
 import { MaybePromise } from "@theia/core";
 import { BackendApplicationContribution } from "@theia/core/lib/node/backend-application";
 import { injectable } from "@theia/core/shared/inversify";
 import { Application } from '@theia/core/shared/express';
-import axios from 'axios';    
+import axios from 'axios'; 
 
 
 
-class Device {
-    protected id: String;
-    protected name: String;
-    protected fqbn: String;
-
-}
 @injectable()
 export class ConnectedDeviceTracker implements BackendApplicationContribution {
 
-   protected devices: [Device];
    protected binaryFile: string;
-   protected binaryFileContent: string;
+   protected binaryFileContent: Buffer;
    protected artifactUrl: string;
 
     configure(app: Application): void {
@@ -30,11 +25,6 @@ export class ConnectedDeviceTracker implements BackendApplicationContribution {
 
     initialize(): MaybePromise<void> {
         console.log("Checking for connected devices.");
-   }
-
-   protected getDevices(): [Device] {
-       //TODO: necessary?
-       return this.devices
    }
 
    public async updateDevices(): Promise<DeviceType[]> {
@@ -53,58 +43,47 @@ export class ConnectedDeviceTracker implements BackendApplicationContribution {
 
 
         console.log(buildPath)
+    
+        const files = await readdir(buildPath)
 
-
-        const fs = require('fs');
-        const FormData = require('form-data');
-
-        fs.readdir(buildPath, (err: any, files: any) => {
-            if(err != null){
-                return new Error(err.message)
+        files.forEach((file: any) => {
+            if(file.endsWith('.bin')){
+                this.binaryFile = buildPath + "/" + file
             }
-            files.forEach((file: any) => {
-                if(file.contains('.bin')){
-                    this.binaryFile = file
-                }
-            });
+        }) 
+
+        console.log('binary file: ' + this.binaryFile)
+
+        this.binaryFileContent = await readFile(this.binaryFile)
+
+        console.log(this.binaryFileContent)
+        //const arraybuffer = Uint8Array.from(this.binaryFileContent)
+        //const artifact = new File([arraybuffer], 'artifact', { type: 'text/plain' })
+        let form = new FormData();
+
+        form.append('file', this.binaryFileContent)
+
+        const response = await axios.post(`http://localhost:3001/deployment-artifacts`, form, {headers:{"Content-Type": "multipart/form-data"}})
+          console.log(response)
+          /*const json = await response.json() as { artifactUrl: string}
+          console.log(json)
+
+          this.artifactUrl = json.artifactUrl
+
+          */
+          this.artifactUrl = response.data.artifactUrl
 
 
-            console.log('binary file: ' + this.binaryFile)
-
-
-        });
-        fs.readfile(this.binaryFile, (err: any, content: any) => {
-            if(err != null){
-                return new Error(err.message)
-            }
-            
-            if(content == null){
-                return new Error('no content found in binary file')
-            }
-            this.binaryFileContent = content
-
-        });
-
-        var form = new FormData();
-        form.append('binary_file', this.binaryFileContent)
-        form.submit('http://localhost:3001/deployment-artifacts', (err: any, res: any) => {
-            if(err){
-                new Error(err.message)
-            }
-            if (res == null){
-                new Error('No artifact url received')
-            }
-            this.artifactUrl = res.artifactUrl
-            console.log('URL: ' + this.artifactUrl)
-        })
+          console.log(this.artifactUrl)
 
         form.append('artifactUrl', this.artifactUrl)
         form.append('id', id)
-        form.submit('http://localhost:3001/deploymentRequests', (err: any, res: any) => {
-            if(err){
-                new Error(err.message)
-            }
-            //TODO: handle response
-        })
-   }
+
+        /*const res = await fetch(`http://localhost:3001/deploymentRequests`, {
+            method: 'POST',
+            body: form
+          })
+          const data = await response.json() as { artifactUri: string}
+        */
+    }
 }
