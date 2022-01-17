@@ -11,6 +11,7 @@ import Deployments from "./pages/Deployments";
 import NotFound from "./pages/NotFound";
 
 import { CdtCloudMain } from "./components/CdtCloudMain";
+import DeviceId from "./pages/DeviceId";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -20,6 +21,7 @@ ReactDOM.render(
           <Route path="/" element={<App />} />
           <Route path="types" element={<Types />} />
           <Route path="devices" element={<Devices />} />
+          <Route path="devices/:id" element={<DeviceId />} />
           <Route path="deployments" element={<Deployments />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
