@@ -1,7 +1,7 @@
-import { DeployRequest, DeviceType } from "deployment-server";
+import { DeployRequest, DeployStatus, DeviceType } from "deployment-server";
 import { useEffect, useState } from "react";
 import defineFunctionalComponent from "../util/defineFunctionalComponent";
-import { Card, Col, DatePicker, Row, Steps } from "antd";
+import { Card, Col, Row, Tag } from "antd";
 import axios from 'axios';
 
 export default defineFunctionalComponent(function DeviceId() {
@@ -15,55 +15,70 @@ export default defineFunctionalComponent(function DeviceId() {
       createdAt: new Date(),
       updatedAt: new Date(),
       artifactUrl: null,
-      deviceId: "device 1",
+      deviceId: 'e6cdc2b2-0558-415d-90c5-3301d016eeae',
     }, {
       id: "12345",
       status: 'SUCCESS',
       createdAt: new Date,
       updatedAt: new Date,
       artifactUrl: null,
-      deviceId: "device 2",
+      deviceId: 'e6cdc2b2-0558-415d-90c5-3301d016eeae',
     }, {
       id: "123",
       status: 'RUNNING',
       createdAt: new Date,
       updatedAt: new Date,
       artifactUrl: null,
-      deviceId: "device 3",
+      deviceId: 'e6cdc2b2-0558-415d-90c5-3301d016eeae',
     }, {
       id: "12",
       status: 'PENDING',
       createdAt: new Date,
       updatedAt: new Date,
       artifactUrl: null,
-      deviceId: "device 3",
+      deviceId: 'e6cdc2b2-0558-415d-90c5-3301d016eeae',
     }, {
       id: "123456",
       status: 'FAILED',
       createdAt: new Date,
       updatedAt: new Date,
       artifactUrl: null,
-      deviceId: "device 3",
+      deviceId: 'e6cdc2b2-0558-415d-90c5-3301d016eeae',
     }]
   );
-  const pendingCards = deployments.filter((deployment) => deployment.status === 'PENDING').map((deployment: DeployRequest, i: number) => (
+  const url = window.location.href
+  const strs = url.split('/');
+  const deviceId = strs.at(-1)
+
+  const renderSwitch = (param: DeployStatus) => {
+    switch(param) {
+      case 'SUCCESS':
+        return 'green';
+      case 'RUNNING':
+        return 'blue';
+      default:
+        return 'red';
+    }
+  };
+  
+  const pendingCards = deployments.filter((deployment) => deployment.status === 'PENDING' && deployment.deviceId === deviceId).map((deployment: DeployRequest, i: number) => (
     <div key={i}>
       <Card title={deployment.id} bordered={true} style={{ width: 200 }}>
-        <p>{deployment.status}</p>
+        <p><Tag color="orange"> {deployment.status} </Tag></p>
       </Card>
     </div>
   ))
 
-  const otherCards = deployments.filter((deployment) => deployment.status !== 'PENDING').map((deployment: DeployRequest, i: number) => (
+  const otherCards = deployments.filter((deployment) => deployment.status !== 'PENDING' && deployment.deviceId === deviceId).map((deployment: DeployRequest, i: number) => (
     <div key={i}>
       <Row gutter={[0, 16]}>
         <Card title={deployment.id} bordered={true} style={{ width: 200 }}>
-          <p>{deployment.status}</p>
+            <p><Tag color={renderSwitch(deployment.status)}>{deployment.status} </Tag></p>
         </Card>
       </Row>
     </div>
   ))
-    const deviceId = 'e8665d51-4221-4d3c-b892-a672a2af37a2'
+
   useEffect(() => {
     fetch("/api/device-types").then(async (res) => {
       setDeviceTypes(await res.json());
