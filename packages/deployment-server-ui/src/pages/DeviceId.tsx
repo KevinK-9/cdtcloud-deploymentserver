@@ -111,15 +111,6 @@ export default defineFunctionalComponent(function DeviceId() {
       setDevice(await res.json());
     });
   }, []);
-  // once there are deployments uncomment
-  /* useEffect(() => {
-    fetch("/api/deployments").then(async (res) => {
-      let data = await res.json()
-      console.log(data)
-
-      setDeployments(await res.json());
-    });
-  }, []); */
 
   useEffect(() => {
     const fetchData = async () => {
