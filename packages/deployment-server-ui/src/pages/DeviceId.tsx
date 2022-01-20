@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 import defineFunctionalComponent from "../util/defineFunctionalComponent";
 import { Card, Col, Row, Tag } from "antd";
 import axios from 'axios';
+import { Device } from ".prisma/client";
+import { useInterval } from "react-use";
 
 export default defineFunctionalComponent(function DeviceId() {
+  let [device, setDevice] = useState<Device | null> (null)
   let [deviceTypes, setDeviceTypes] = useState<DeviceType[]>(
     Array(15).fill({})
   );
@@ -46,42 +49,66 @@ export default defineFunctionalComponent(function DeviceId() {
       deviceId: 'e6cdc2b2-0558-415d-90c5-3301d016eeae',
     }]
   );
+  let [refetchFlip, setRefetchFlip] = useState(false);
+
+  useInterval(function () {
+    setRefetchFlip(!refetchFlip);
+  }, 3000);
+  
   const url = window.location.href
   const strs = url.split('/');
   const deviceId = strs.at(-1)
 
-  const renderSwitch = (param: DeployStatus) => {
-    switch(param) {
-      case 'SUCCESS':
-        return 'green';
-      case 'RUNNING':
-        return 'blue';
-      default:
-        return 'red';
-    }
+  const status: Record<DeployStatus, { color: string; text: string }> = {
+    SUCCESS: {
+      color: "green",
+      text: "SUCCESS",
+    },
+    TERMINATED: {
+      color: "yellow",
+      text: "TERMINATED",
+    },
+    FAILED: {
+      color: "red",
+      text: "ERROR",
+    },
+    PENDING: {
+      color: "blue",
+      text: "PENDING",
+    },
+    RUNNING: {
+      color: "grey",
+      text: "RUNNING",
+    },
   };
-  
-  const pendingCards = deployments.filter((deployment) => deployment.status === 'PENDING' && deployment.deviceId === deviceId).map((deployment: DeployRequest, i: number) => (
-    <div key={i}>
+
+  const pendingCards = deployments.filter((deployment) => deployment.status === 'PENDING' && deployment.deviceId === deviceId).map((deployment: DeployRequest) => (
+    <div key={deployment.id}>
       <Card title={deployment.id} bordered={true} style={{ width: 200 }}>
-        <p><Tag color="orange"> {deployment.status} </Tag></p>
+        <p><Tag color={status[deployment.status].color}> {status[deployment.status].text} </Tag></p>
       </Card>
     </div>
   ))
 
-  const otherCards = deployments.filter((deployment) => deployment.status !== 'PENDING' && deployment.deviceId === deviceId).map((deployment: DeployRequest, i: number) => (
-    <div key={i}>
+  const otherCards = deployments.filter((deployment) => deployment.status !== 'PENDING' && deployment.deviceId === deviceId).map((deployment: DeployRequest) => (
+    <div key={deployment.id}>
       <Row gutter={[0, 16]}>
         <Card title={deployment.id} bordered={true} style={{ width: 200 }}>
-            <p><Tag color={renderSwitch(deployment.status)}>{deployment.status} </Tag></p>
+            <p><Tag color={status[deployment.status].color}> {status[deployment.status].text} </Tag></p>
         </Card>
       </Row>
     </div>
   ))
-
+  
   useEffect(() => {
     fetch("/api/device-types").then(async (res) => {
       setDeviceTypes(await res.json());
+    });
+  }, []);
+
+  useEffect(() => {
+    fetch(`/api/devices/${deviceId}`).then(async (res) => {
+      setDevice(await res.json());
     });
   }, []);
   // once there are deployments uncomment
@@ -103,18 +130,17 @@ export default defineFunctionalComponent(function DeviceId() {
       setDeployments(data)
     }
     fetchData()
-  }, []);
+  }, [refetchFlip]);
   
-  console.log(deployments);
-  //deployments.filter(deployment => deployment.deviceId === props.id)
+  const deviceType = deviceTypes.find((type) => type.id === device?.deviceTypeId)
   
   return (
     <main>
       <Row justify="space-between">
         <Col>
-          <h2>props.device.name</h2>
-          <li>deviceType.name</li>
-          <li>deviceType.fqbn</li>
+          <h2>Device ID: { device ? device.id : 'No device found'}</h2>
+          <li>Device Type: { deviceType ? deviceType.name : '' }</li>
+          <li>FQBN: { deviceType ? deviceType.fqbn : '' }</li>
           <Row>
             {pendingCards}
           </Row>
