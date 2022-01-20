@@ -8,9 +8,7 @@ import { useInterval } from "react-use";
 
 export default defineFunctionalComponent(function DeviceId() {
   let [device, setDevice] = useState<Device | null> (null)
-  let [deviceTypes, setDeviceTypes] = useState<DeviceType[]>(
-    Array(15).fill({})
-  );
+  let [deviceTypes, setDeviceTypes] = useState<DeviceType[]>([]);
   let [deployments, setDeployments] = useState<DeployRequest[]>(
     [{
       id: "1234",
