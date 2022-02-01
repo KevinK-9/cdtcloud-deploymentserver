@@ -32,7 +32,7 @@ export interface DeviceTypeResource extends DeviceTypeWithCount {
       TERMINATED: number
     }
   }>
-
+  estimatedQueueTime: number
 }
 
 export type { DeviceType }

@@ -102,9 +102,27 @@ export async function toJSON (deviceType: DeviceType & {_count: {devices: number
     }
   }
 
+  const numberOfPendingDeployments = await db.deployRequest.count({
+    where: {
+      status: DeployStatus.PENDING,
+      device: {
+        deviceTypeId: deviceType.id
+      }
+    }
+  })
+
+  const numberOfDevices = await db.device.count({
+    where: {
+      deviceTypeId: deviceType.id
+    }
+  })
+
+  const estimatedQueueTime = Math.round(numberOfPendingDeployments * 30 / numberOfDevices)
+
   return {
     ...deviceTypeWithCount,
     ...status,
-    history
+    history,
+    estimatedQueueTime
   }
 }
