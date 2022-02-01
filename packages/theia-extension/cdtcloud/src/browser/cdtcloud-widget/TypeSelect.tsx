@@ -19,7 +19,17 @@ export const TypeSelect: FunctionComponent<{
     status: "",
     estimatedQueueTime: 0
   });
+  const [seconds, setSeconds] = useState<number>(0);
+  function startTimer() {
+    if (seconds > 0) {
+      setInterval(countDown, 1000);
+    }
+  }
 
+  function countDown() {
+    // Remove one second, set state so a re-render happens.
+    setSeconds(seconds - 1);
+  }
   useEffect(() => {
     const updatedSelectionFromOptions = options.find(
       (option) => option.value === board.value
@@ -104,11 +114,13 @@ export const TypeSelect: FunctionComponent<{
           if (!e) return;
           const newBoard = { label: e.label, value: e.value, status: e.status, estimatedQueueTime: e.estimatedQueueTime };
           setBoard(newBoard);
+          setSeconds(e.estimatedQueueTime)
+          startTimer()
         }}
       />
-    {
-      board.estimatedQueueTime > 0 ?
-        <p>Estimated Queue Time: {board.estimatedQueueTime}s</p>
+    { 
+      seconds > 0 ?
+        <p>Estimated Queue Time: {seconds}s</p>
         : <></>
     }
 
