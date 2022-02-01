@@ -6,6 +6,7 @@ interface Option {
   label: string;
   value: string;
   status: string;
+  estimatedQueueTime: number;
 }
 
 export const TypeSelect: FunctionComponent<{
@@ -16,6 +17,7 @@ export const TypeSelect: FunctionComponent<{
     label: "No Board Selected",
     value: "",
     status: "",
+    estimatedQueueTime: 0
   });
 
   useEffect(() => {
@@ -64,6 +66,7 @@ export const TypeSelect: FunctionComponent<{
       alignItems: "center",
     };
   }
+
   return (
     <div>
       <Select
@@ -99,10 +102,15 @@ export const TypeSelect: FunctionComponent<{
         }}
         onChange={(e: Option) => {
           if (!e) return;
-          const newBoard = { label: e.label, value: e.value, status: e.status };
+          const newBoard = { label: e.label, value: e.value, status: e.status, estimatedQueueTime: e.estimatedQueueTime };
           setBoard(newBoard);
         }}
       />
+    {
+      board.estimatedQueueTime > 0 ?
+        <p>Estimated Queue Time: {board.estimatedQueueTime}s</p>
+        : <></>
+    }
 
       <button
         style={{
